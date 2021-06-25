@@ -1,0 +1,1 @@
+docker-compose up hz1 hz2 hz3 consul-server consul-client rabbitmq

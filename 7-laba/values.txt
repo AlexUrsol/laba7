@@ -1,0 +1,5 @@
+rabbit_host=rabbitmq
+queue=mq_for_messages_service
+cluster=dev
+map=distr_map
+hazelcast_addrs=hz1:5701,hz2:5701,hz3:5701

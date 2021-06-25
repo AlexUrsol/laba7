@@ -1,0 +1,75 @@
+version: "3"
+
+services:
+  hz1:
+    image: "hazelcast/hazelcast"
+    ports:
+      - 5701:5701
+  hz2:
+    image: "hazelcast/hazelcast"
+
+    ports:
+      - 5702:5701
+  hz3:
+    image: "hazelcast/hazelcast"
+    ports:
+      - 5703:5701
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+  consul-server:
+    image: hashicorp/consul:1.9.3
+    container_name: consul-server
+    restart: always
+    volumes:
+     - ./server.json:/consul/config/server.json:ro
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    command: "agent"
+
+  consul-client:
+    image: hashicorp/consul:1.9.3
+    container_name: consul-client
+    restart: always
+    volumes:
+     - ./client.json:/consul/config/client.json:ro
+    command: "agent"
+
+  facade:
+    build: facade
+    ports: 
+      - "1345:1345"
+  
+  logging_service_1:
+    build: logging_service
+    ports: 
+      - "8011:8011"
+    command: "python app.py 1"
+  
+  logging_service_2:
+    build: logging_service
+    ports: 
+      - "8012:8011"
+    command: "python app.py 2"
+
+  logging_service_3:
+    build: logging_service
+    ports: 
+      - "8013:8011"
+    command: "python app.py 3"
+  
+  messager_1:
+    build: messager
+    ports:
+      - "1122:1122"
+    command: "python app.py 1"
+  
+  messager_2:
+    build: messager
+    ports:
+      - "1123:1122"
+    command: "python app.py 2"
